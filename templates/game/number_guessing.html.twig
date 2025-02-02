@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Number Guessing Game</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center">Number Guessing Game</h1>
+
+        {% if app.request.hasPreviousSession and app.session.flashbag.has('error') %}
+            <div class="alert alert-danger">
+                {% for message in app.session.flashbag.get('error') %}
+                    {{ message }}
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <!-- Scores -->
+        <div class="mb-4">
+            <h3>Scores:</h3>
+            <ul>
+                {% for player in players %}
+                    <li>
+                    <strong>{{ player.name }}:</strong> 
+                    <span class="badge bg-primary rounded-pill">{{ player.score }} points</span>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <!-- Current Player -->
+        <div class="mb-4">
+            <h3>Current Player:</h3>
+            <p class="alert alert-info"><strong>{{ currentPlayer }}'s </strong> turn to guess</p>
+        </div>
+
+        <!-- Attempts -->
+        <div class="attempts mb-4">
+            <h3>Attempts:</h3>
+            <ul>
+                {% for player in players %}
+                    <li>
+                        <strong>{{ player.name }}: </strong>
+                        <span class="badge bg-warning text-dark">
+                        {{ maxAttempts - player.attempts_used }} attempts left 
+                        ({{ player.attempts_used }} used)
+                        </span>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <!-- Game Message -->
+        {% if message %}
+            <div class="alert alert-success">
+                {{ message }}
+            </div>
+        {% endif %}
+
+        <!-- Guess Form (only if game is not over) -->
+        {% if not app.session.get('gameOver') %}
+            <div>
+                {{ form_start(form) }}
+                    {{ form_row(form.guess, {'attr': {'class': 'form-control'}}) }}
+                    {{ form_row(form.submit) }}
+                {{ form_end(form) }}
+            </div>
+        {% else %}
+            <div class="alert alert-secondary">
+                Game Over! 
+            </div>   
+            <div>
+                <a href="{{ path('game_restart') }}" class="btn btn-primary">Replay</a>
+                <a href="{{ path('game_reset') }}" class="btn btn-secondary me-2">Start New Game</a>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>

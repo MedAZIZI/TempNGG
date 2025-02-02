@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Game List</title>
+	</head>
+	<body>
+		<div class="container mt-5">
+			<h1 class="text-center">Game List</h1>
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<th>idGame</th>
+						<th>Player</th>
+						<th>Difficulty</th>
+						<th>Final Score</th>
+						<th>Played At</th>
+					</tr>
+				</thead>
+				<tbody>
+
+					{% for game in games %}
+						{% set displayedPlayers = [] %}
+						{% for player in game.players %}
+							{% if player.name not in displayedPlayers %}
+								<tr>
+									<td>{{ game.id }}</td>
+									<td>{{ player.name }}</td>
+									<td>{{ game.difficulty }}</td>
+									<td>{{ player.score }}</td>
+									<td>{{ game.playedAt|date('Y-m-d H:i:s') }}</td>
+								</tr>
+								{% set displayedPlayers = displayedPlayers|merge([player.name]) %}
+							{% endif %}
+						{% endfor %}
+					{% endfor %}
+
+
+				</tbody>
+			</table>
+		</div>
+	</body>
+</html>
